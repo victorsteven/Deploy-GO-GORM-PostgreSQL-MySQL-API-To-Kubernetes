@@ -1,0 +1,41 @@
+apiVersion: apps/v1 
+kind: Deployment              # Type of the kubernetes resource
+metadata:
+  name: fullstack-app-mysql 
+  labels:
+    app: fullstack-app-mysql
+spec:
+  replicas: 1  
+  selector:
+    matchLabels: 
+      app: fullstack-app-mysql
+  template:   
+    metadata:
+      labels: 
+        app: fullstack-app-mysql
+    spec: 
+      containers:
+      - name: fullstack-app-mysql 
+        image: victorsteven/fullstack:1.3.1
+        imagePullPolicy: IfNotPresent
+        ports:
+          - name: http
+            containerPort: 8080 
+        envFrom:
+          - secretRef:
+              name: mysql-secret
+      
+apiVersion: v1  
+kind: Service 
+metadata:
+  name: fullstack-app-mysql
+  labels:
+    app: fullstack-app-mysql
+spec:
+  type: NodePort  
+  selector:
+    app: fullstack-app-mysql 
+  ports: 
+  - name: http
+    port: 8080
+    targetPort: 8080
