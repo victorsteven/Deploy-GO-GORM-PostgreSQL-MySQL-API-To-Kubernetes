@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolume                      # Create a PV
+metadata:
+  name: mysql-pv-volume
+  labels:
+    type: local
+    app: fullstack-mysql
+spec:
+  storageClassName: manual                  # Storage class. A PV Claim requesting the same storageClass can be bound to this volume. 
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:                                 # hostPath PersistentVolume is used for development and testing. It uses a file/directory on the Node to emulate network-attached storage
+    path: "/mnt/data"
+  persistentVolumeReclaimPolicy: Retain     # Retain the PV even after PVC is deleted. 

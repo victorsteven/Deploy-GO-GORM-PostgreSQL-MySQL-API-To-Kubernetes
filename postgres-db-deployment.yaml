@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment                                # Type of the kubernetes resource
+metadata:
+  name: fullstack-postgres                       # Name of the deployment
+  labels:                                        # Labels applied to this deployment 
+    app: fullstack-postgres
+spec:
+  selector:
+    matchLabels:                                  # This deployment applies to the Pods matching the specified labels
+      app: fullstack-postgres
+      tier: postgres
+  replicas: 1
+  template:                                       # Template for the Pods in this deployment
+    metadata:
+      labels:                                     # Labels to be applied to the Pods in this deployment
+        app: fullstack-postgres
+        tier: postgres
+    spec:                                         # The spec for the containers that will be run inside the Pods in this deployment
+      containers:
+        - image: postgres:latest                  # The container image
+          name: postgres
+          imagePullPolicy: "IfNotPresent"
+          envFrom:                                # Get the environmental variables from a secret file whose name is "postgres-secret"
+            - secretRef:
+                name: postgres-secret
+            
+          ports:
+            - containerPort: 5432                   # The port that the container exposes 
+              name: postgres
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-persistent-storage     # This name should match the name specified in `volumes.name`
+      volumes:                                      # A PersistentVolume is mounted as a volume to the Pod 
+        - name: postgres-persistent-storage
+          persistentVolumeClaim:
+            claimName: postgres-pv-claim
+
+
+

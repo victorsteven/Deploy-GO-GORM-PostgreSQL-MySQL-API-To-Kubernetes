@@ -1,0 +1,14 @@
+apiVersion: v1  
+kind: Service                                 # Type of the kubernetes resource
+metadata:
+  name: fullstack-app-postgres                # Name of the Kubernetes resource
+  labels:                                     # Labels that will be applied to the resource
+    app: fullstack-app-postgres
+spec:
+  type: NodePort                              # Gives each node an external IP that’s accessible from outside the cluster and also opens a Port.
+  selector:
+    app: fullstack-app-postgres               # Selects any Pod with labels `app=fullstack-app-postgres`
+  ports: 
+  - name: http
+    port: 8080
+    targetPort: 8080

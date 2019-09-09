@@ -1,0 +1,13 @@
+apiVersion: v1                           # API version
+kind: Service                            # Type of kubernetes resource 
+metadata:
+  name: fullstack-mysql                  # Name of the resource
+  labels:                                # Labels that will be applied to the resource
+    app: fullstack-mysql
+spec:
+  type: NodePort
+  ports:
+    - port: 3306
+  selector:                              # Selects any Pod with labels `app=fullstack-mysql,tier=mysql`
+    app: fullstack-mysql
+    tier: mysql 
